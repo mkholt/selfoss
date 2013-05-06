@@ -60,6 +60,17 @@ selfoss.events.entriesToolbar = function(parent) {
         e.preventDefault();
         return false;
     });
+
+    // throw on mobile (from http://pastebin.com/U660B1fF)
+    parent.find('.entry-throw').unbind('click').click(function(e) {
+        $(this).parents(".entry").find(".entry-unread").click();
+        var entryID = $(this).parents('.entry').attr('id').replace("entrr", "entry");
+        var entry = $("#" + entryID);
+        $(this).parents(".entry").find(".entry-close").click();
+        entry.next().click();
+        e.preventDefault();
+        return false;
+    });
     
     // only loggedin users
     if($('body').hasClass('loggedin')==true) {
