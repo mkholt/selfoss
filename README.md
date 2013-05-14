@@ -4,7 +4,7 @@ selfoss
 Copyright (c) 2013 Tobias Zeising, tobias.zeising@aditu.de  
 http://selfoss.aditu.de  
 Licensed under the GPLv3 license  
-Version 2.7-SNAPSHOT
+Version 2.8-SNAPSHOT
 
 
 INSTALLATION
@@ -12,7 +12,7 @@ INSTALLATION
 
 1. Upload all files of this folder (IMPORTANT: also upload the invisible .htaccess files)
 2. Make the directories data/cache, data/favicons, data/logs, data/thumbnails, data/sqlite and public/ writeable
-3. Insert database access data in config.ini (see below -- you have not to change anything if you would like to use sqlite)
+3. Insert database access data in config.ini (see below -- you don't have to change anything if you want to use sqlite)
 3. You don't have to install the database, it will be created automatically
 4. Create cronjob for updating feeds and point it to http://yourselfossurl.com/update via wget or curl. You can also execute the update.php from commandline.
 
@@ -50,7 +50,11 @@ Visit the page http://yourselfossurl.com/opml for importing your OPML File. If y
 CHANGELOG
 ---------
 
-Version 2.7-SNAPSHOT
+Version 2.8-SNAPSHOT
+* new Polish translation (thanks a lot to Piotr Dymacz)
+* improved Expires section and Compression in .htaccess (thanks a lot to S Anand)
+
+Version 2.7
 * new spout for instapaper (thanks a lot to janeczku)
 * new Hungarian translation (thanks a lot to Sancho)
 * fix keyboard shortcut on some browsers
