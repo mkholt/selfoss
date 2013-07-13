@@ -53,6 +53,16 @@ CHANGELOG
 Version 2.8-SNAPSHOT
 * new Polish translation (thanks a lot to Piotr Dymacz)
 * improved Expires section and Compression in .htaccess (thanks a lot to S Anand)
+* make api item listing, tags and sources stats accessible for non loggedin users in public mode
+* update fat free php framework version 3.0.8
+* new configuration parameter for default readability api key
+* new configuration parameter for allowing unauthorized access for the update job
+* new delicious support (thanks a lot to bbeardsley)
+* support ssl proxy (thanks a lot to zajad)
+* new readability support (thanks a lot to hayk)
+* pass original url to external sites except for opening the anonymized url (thanks a lot to bbeardsley)
+* new finnish translation (thanks a lot to jukper)
+* new spanish translation (thanks a lot to Matias Perrone)
 
 Version 2.7
 * new spout for instapaper (thanks a lot to janeczku)

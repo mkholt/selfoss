@@ -118,6 +118,16 @@ input {
         overflow:hidden;
     }
     
+        .nav-tags-collapsed {
+            padding-left: 20px;
+            background: url(images/nav-collapsed.png) center left no-repeat;
+        }
+        
+        .nav-tags-expanded {
+            padding-left: 20px;
+            background: url(images/nav-expanded.png) center left no-repeat;
+        }
+        
         #nav-tags li {
             position:relative;
             color:#b9b9b9;
@@ -156,6 +166,16 @@ input {
         overflow:hidden;
     }
     
+        .nav-sources-collapsed {
+            padding-left: 20px;
+            background: url(images/nav-collapsed.png) center left no-repeat;
+        }
+        
+        .nav-sources-expanded {
+            padding-left: 20px;
+            background: url(images/nav-expanded.png) center left no-repeat;
+        }
+        
         #nav-sources {
             display:none;
         }
@@ -466,6 +486,10 @@ input {
         text-decoration:none;
     }
     
+    .entry-link {
+        display:none;
+    }
+
     .entry-source,
     .entry-separator,
     .entry-datetime {
@@ -549,7 +573,15 @@ input {
         .entry-sharepocket {
             background-image:url(images/pocket.png);
         }
+
+        .entry-sharereadability {
+            background-image:url(images/readability.png);
+        }
     
+        .entry-sharedelicious {
+            background-image:url(images/delicious.png);
+        }
+
         .entry-smartphone-share li.entry-shareemail,
         .entry-toolbar li.entry-shareemail {
             background-image:url(images/mail.png);
@@ -937,10 +969,6 @@ body.publicmode.notloggedin .entry-unread {
             display:block;
         }
    
-    .entry-toolbar .entry-newwindow {
-        display:none;
-    }
-
     .entry-content {
         display:none;
         -moz-column-count: 1;
@@ -1175,8 +1203,12 @@ body.publicmode.notloggedin .entry-unread {
             #fullscreen-entry .entry-close {
                 display:block;
             }
-    
-    .entry-share {
+   
+    .entry-toolbar .entry-newwindow {
+        display:none;
+    }
+ 
+    .entry-toolbar .entry-share {
         display:none;
     }
     

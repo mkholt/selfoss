@@ -18,7 +18,7 @@
             <?PHP echo $this->item['unread']==1 ? 'unread' : ''; ?>">
     
     <!-- icon -->
-    <a href="<?PHP echo $this->item['link']; ?>" class="entry-icon">
+    <a href="<?PHP echo trim(\F3::get('anonymizer')) . $this->item['link']; ?>" class="entry-icon">
         <?PHP if(strlen(trim($this->item['icon']))>0 && $this->item['icon']!="0") : ?>
         <img src="<?PHP echo 'favicons/'.$this->item['icon']; ?>" alt="<?PHP echo $sourcetitle ?>" />
         <?PHP endif; ?>
@@ -35,6 +35,7 @@
     
     <!-- source -->
     <a href="<?PHP echo trim(\F3::get('anonymizer')) . $this->item['link']; ?>" class="entry-source entry-source<?PHP echo $this->item['source']; ?>" target="_blank"><?PHP echo $sourcetitle ?></a>
+    <a href="<?PHP echo $this->item['link']; ?>" class="entry-link"></a>
 
     <span class="entry-separator">&bull;</span>
 
@@ -56,11 +57,13 @@
         
         <ul class="entry-smartphone-share">
             <li class="entry-newwindow"><?PHP echo \F3::get('lang_open_window')?></li>
-            <li class="entry-sharegoogle" title="google">google</li>
-            <li class="entry-sharetwitter" title="twitter">twitter</li>
-            <li class="entry-sharefacebook" title="facebook">facebook</li>
-            <li class="entry-sharepocket" title="pocket">pocket</li>
-            <li class="entry-shareemail" title="email">email</li>
+            <li class="entry-sharegoogle entry-share" title="google">google</li>
+            <li class="entry-sharetwitter entry-share" title="twitter">twitter</li>
+            <li class="entry-sharefacebook entry-share" title="facebook">facebook</li>
+            <li class="entry-sharepocket entry-share" title="pocket">pocket</li>
+            <li class="entry-sharedelicious entry-share" title="delicious">delicious</li>
+            <li class="entry-sharereadability entry-share" title="readability">readability</li>
+            <li class="entry-shareemail entry-share" title="email">email</li>
             <li class="entry-throw" title="throw">throw</li>
         </ul>
     </div>
@@ -75,6 +78,8 @@
         <li class="entry-sharetwitter entry-share" title="twitter">&nbsp;</li>
         <li class="entry-sharefacebook entry-share" title="facebook">&nbsp;</li>
         <li class="entry-sharepocket entry-share" title="pocket">&nbsp;</li>
+        <li class="entry-sharedelicious entry-share" title="delicious">&nbsp;</li>
+        <li class="entry-sharereadability entry-share" title="readability">&nbsp;</li>
         <li class="entry-shareemail entry-share" title="email">&nbsp;</li>
         <li class="entry-close"></li>
     </ul>
