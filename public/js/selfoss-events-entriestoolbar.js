@@ -78,7 +78,7 @@ selfoss.events.entriesToolbar = function(parent) {
     });
 
     // throw on mobile (from http://pastebin.com/U660B1fF)
-    parent.find('.entry-throw').unbind('click').click(function(e) {
+    parent.find('.entry-sharethrow').unbind('click').click(function(e) {
         $(this).parents(".entry").find(".entry-unread").click();
         var entryID = $(this).parents('.entry').attr('id').replace("entrr", "entry");
         var entry = $("#" + entryID);
@@ -128,7 +128,7 @@ selfoss.events.entriesToolbar = function(parent) {
                     // rollback ui changes
                     setButton(!starr);
                     updateStats(!starr);
-                    alert('Can not starr/unstarr item: '+errorThrown);
+                    selfoss.showError('Can not star/unstar item: '+errorThrown); 
                 }
             });
             
@@ -219,7 +219,7 @@ selfoss.events.entriesToolbar = function(parent) {
                     // rollback ui changes
                     updateStats(!unread);
                     setButton(!unread);
-                    alert('Can not mark/unmark item: '+errorThrown);
+                    selfoss.showError('Can not mark/unmark item: '+errorThrown); 
                 }
             });
             
