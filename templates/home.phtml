@@ -4,7 +4,7 @@
 
     <meta charset="utf-8">
 
-    <title>selfoss</title>
+    <title>selfoss<?PHP echo $this->statsUnread>0 ? ' ('.$this->statsUnread.')' : ''; ?></title>
     
     <meta name="description" content="selfoss" />
     <meta name="author" content="Tobias Zeising" />
@@ -38,7 +38,7 @@
     <?PHP echo \F3::get('auto_mark_as_read')==1 ? "auto_mark_as_read" : ""; ?>
 ">
     
-    <div id="error">error message</div>
+    <div id="error"></div>
     
     <!-- language settings for jQuery -->
     <span id="lang"
@@ -48,12 +48,16 @@
         data-unstar="<?PHP echo \F3::get('lang_unstar'); ?>"
         data-source_warn="<?PHP echo \F3::get('lang_source_warn'); ?>"
         data-source_saved="<?PHP echo \F3::get('lang_source_saved'); ?>"
-        data-source_edit="<?PHP echo \F3::get('lang_source_edit'); ?>">
+        data-source_edit="<?PHP echo \F3::get('lang_source_edit'); ?>"></span>
 
     <!-- other settings -->
     <span id="config"
-        data-anonymizer="<?PHP echo trim(\F3::get('anonymizer')); ?>"
-        data-auto_mark_as_read="<?PHP echo \F3::get('auto_mark_as_read'); ?>">
+        data-anonymizer="<?PHP echo \helpers\Anonymizer::getAnonymizer(); ?>"
+        data-wallabag="<?PHP echo \F3::get('wallabag'); ?>"
+        data-auto_mark_as_read="<?PHP echo \F3::get('auto_mark_as_read'); ?>"
+        data-auto_stream_more="<?PHP echo \F3::get('auto_stream_more'); ?>"
+        data-load_images_on_mobile="<?PHP echo \F3::get('load_images_on_mobile'); ?>"
+        data-items_perpage="<?PHP echo \F3::get('items_perpage'); ?>" ></span>
 
     <!-- menue open for smartphone -->
     <div id="nav-mobile">
@@ -85,26 +89,30 @@
         <h2 id="nav-sources-title" class="nav-sources-collapsed"><?PHP echo \F3::get('lang_sources') ?></h2>
         <ul id="nav-sources">
             <?PHP echo $this->sources; ?>
+        </ul>
         </div>
         
         <hr>
         
         <!-- navigation search input just for smartphone version -->
         <div id="nav-search">
-            <input type="text" id="nav-search-term"></input> <input type="button" id="nav-search-button" value="<?PHP echo \F3::get('lang_searchbutton')?>" />
+            <input type="text" id="nav-search-term" /> <input type="button" id="nav-search-button" value="<?PHP echo \F3::get('lang_searchbutton')?>" />
             <hr>
         </div>
         
-        <?PHP if($this->loggedin===true) : ?>
-        <div id="nav-settings" <?PHP if(\F3::get('auth')->enabled()===false) : ?>class="nologin"<?PHP endif; ?>></div>
+        <?PHP if($this->loggedin===true && \F3::get('auth')->enabled()===false) : ?>
+        <div id="nav-refresh" title="<?PHP echo trim(\F3::get('lang_refreshbutton')); ?>" class="nologin"></div>
+        <div id="nav-settings" title="<?PHP echo trim(\F3::get('lang_settingsbutton')); ?>" class="nologin"></div>
         <?PHP endif; ?>
         
         <?PHP if($this->loggedin===true && \F3::get('auth')->enabled()===true) : ?>
-        <div id="nav-logout"></div>
+        <div id="nav-refresh" title="<?PHP echo trim(\F3::get('lang_refreshbutton')); ?>"></div>
+        <div id="nav-settings" title="<?PHP echo trim(\F3::get('lang_settingsbutton')); ?>"></div>
+        <div id="nav-logout" title="<?PHP echo trim(\F3::get('lang_logoutbutton')); ?>"></div>
         <?PHP endif; ?>
         
         <?PHP if($this->loggedin===false) : ?>
-        <div id="nav-login"></div>
+        <div id="nav-login" title="<?PHP echo trim(\F3::get('lang_loginbutton')); ?>"></div>
         <?PHP endif; ?>
         
         <a id="nav-copyright" href="http://selfoss.aditu.de" target="_blank">selfoss <?PHP echo \F3::get('version'); ?></a>
@@ -112,7 +120,7 @@
     
     <!-- search -->
     <div id="search">
-        <input type="text" id="search-term"></input>
+        <input type="text" id="search-term" />
         <div id="search-remove"></div>
         <div id="search-button"></div>
         <div id="search-shownav"></div>

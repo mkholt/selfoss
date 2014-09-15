@@ -30,13 +30,13 @@ class Items extends \daos\mysql\Items {
         else if(isset($options['type']) && $options['type']=='unread'){
             $where .= ' AND unread=true ';
             if(\F3::get('unread_order')=='asc'){
-            	$order = 'ASC';
+                $order = 'ASC';
             }
         }
         
         // search
         if(isset($options['search']) && strlen($options['search'])>0) {
-            $search = str_replace(" ", "%", trim($options['search']));
+            $search = implode('%', \helpers\Search::splitTerms($options['search']));
             $params[':search'] = $params[':search2'] = $params[':search3'] = array("%".$search."%", \PDO::PARAM_STR);
             $where .= ' AND (items.title LIKE :search OR items.content LIKE :search2 OR sources.title LIKE :search3) ';
         }
@@ -50,6 +50,12 @@ class Items extends \daos\mysql\Items {
         elseif(isset($options['source']) && strlen($options['source'])>0) {
             $params[':source'] = array($options['source'], \PDO::PARAM_INT);
             $where .= " AND items.source=:source ";
+        }
+
+        // update time filter
+        if(isset($options['updatedsince']) && strlen($options['updatedsince'])>0) {
+            $params[':updatedsince'] = array($options['updatedsince'], \PDO::PARAM_STR);
+            $where .= " AND items.updatetime > :updatedsince ";
         }
         
         // set limit
@@ -65,7 +71,7 @@ class Items extends \daos\mysql\Items {
 
         // get items from database
         return \F3::get('db')->exec('SELECT 
-                    items.id, datetime, items.title AS title, content, unread, starred, source, thumbnail, icon, uid, link, sources.title as sourcetitle, sources.tags as tags
+                    items.id, datetime, items.title AS title, content, unread, starred, source, thumbnail, icon, uid, link, updatetime, author, sources.title as sourcetitle, sources.tags as tags
                    FROM items, sources 
                    WHERE items.source=sources.id '.$where.' 
                    ORDER BY items.datetime '.$order.' 
