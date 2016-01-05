@@ -56,8 +56,8 @@ abstract class spout implements \Iterator {
      * @var bool|mixed
      */
     public $params = false;
-    
-    
+
+
     /**
      * loads content for given source
      *

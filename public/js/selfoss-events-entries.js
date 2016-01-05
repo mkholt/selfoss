@@ -20,6 +20,7 @@ selfoss.events.entries = function(e) {
             return;
         
         var autoMarkAsRead = $('#config').data('auto_mark_as_read')=="1" && parent.hasClass('unread');
+        var autoHideReadOnMobile = $('#config').data('auto_hide_read_on_mobile')=="1" && parent.hasClass('unread');
         
         // anonymize
         selfoss.anonymize(parent.find('.entry-content'));
@@ -61,6 +62,9 @@ selfoss.events.entries = function(e) {
             fullscreen.find('.entry, .entry-close').click(function(e) {
                 if(e.target.tagName.toLowerCase()=="a")
                     return;
+                if(autoHideReadOnMobile && ($('#entrr'+parent.attr('id').substr(5)).hasClass('unread')==false)) {
+                    $('#'+parent.attr('id')).hide();
+                }
                 content.show();
                 location.hash = "";
                 $(window).scrollTop(scrollTop);
@@ -80,6 +84,9 @@ selfoss.events.entries = function(e) {
                 parent.find('.entry-toolbar').hide();
                 content.hide();
             } else {
+                if($('#config').data('auto_collapse')=="1"){
+                    $('.entry-content, .entry-toolbar').hide();
+                }
                 content.show();
                 selfoss.events.entriesToolbar(parent);
                 parent.find('.entry-toolbar').show();
@@ -91,6 +98,9 @@ selfoss.events.entries = function(e) {
 
                 // setup fancyBox image viewer
                 selfoss.setupFancyBox(content, parent.attr('id').substr(5));
+
+                // scroll to article header
+                parent.get(0).scrollIntoView();
             }
             
             // load images not on mobile devices
@@ -117,12 +127,9 @@ selfoss.events.entries = function(e) {
             $('.stream-more').click();
     });
     
-    $('.mark-these-read').unbind('click').click(function () {
-        $('#nav-mark').click();
-        // hide nav on smartphone
-        if(selfoss.isSmartphone())
-            $('#nav-mobile-settings').click();
-    });
+    $('.mark-these-read').unbind('click').click(selfoss.markVisibleRead);
+
+    $('.stream-error').unbind('click').click(selfoss.reloadList);
 
     // more
     $('.stream-more').unbind('click').click(function () {
@@ -142,7 +149,8 @@ selfoss.events.entries = function(e) {
             },
             error: function(jqXHR, textStatus, errorThrown) {
                 streamMore.removeClass('loading');
-                selfoss.showError('Load more error: '+errorThrown);
+                selfoss.showError('Load more error: '+
+                                  textStatus+' '+errorThrown);
             }
         });
     });

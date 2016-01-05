@@ -28,7 +28,7 @@ class Database {
      */
     public function __construct() {
         if(self::$initialized===false && \F3::get('db_type')=="mysql") {
-            // establish database connection
+            \F3::get('logger')->log("Establish database connection", \DEBUG);
             \F3::set('db', new \DB\SQL(
                 'mysql:host=' . \F3::get('db_host') . ';port=' . \F3::get('db_port') . ';dbname='.\F3::get('db_database'),
                 \F3::get('db_username'),
@@ -56,10 +56,10 @@ class Database {
                         source INT NOT NULL ,
                         uid VARCHAR(255) NOT NULL,
                         link TEXT NOT NULL,
-                        updatetime DATETIME NOT NULL,
+                        updatetime DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                         author VARCHAR(255),
                         INDEX (source)
-                    ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+                    ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
                 ');
                 \F3::get('db')->exec('
                     CREATE TRIGGER insert_updatetime_trigger
@@ -86,9 +86,11 @@ class Database {
                         tags TEXT,
                         spout TEXT NOT NULL ,
                         params TEXT NOT NULL ,
+                        filter TEXT,
                         error TEXT,
-                        lastupdate INT
-                    ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+                        lastupdate INT,
+                		lastentry INT
+                    ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
                 ');
                 $isNewestSourcesTable = true;
             }
@@ -98,18 +100,18 @@ class Database {
                 \F3::get('db')->exec('
                     CREATE TABLE '.\F3::get('db_prefix').'version (
                         version INT
-                    ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+                    ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
                 ');
                 
                 \F3::get('db')->exec('
-                    INSERT INTO '.\F3::get('db_prefix').'version (version) VALUES (5);
+                    INSERT INTO '.\F3::get('db_prefix').'version (version) VALUES (8);
                 ');
                 
                 \F3::get('db')->exec('
                     CREATE TABLE '.\F3::get('db_prefix').'tags (
                         tag         TEXT NOT NULL,
                         color       VARCHAR(7) NOT NULL
-                    ) ENGINE = MYISAM DEFAULT CHARSET=utf8;
+                    ) ENGINE = InnoDB DEFAULT CHARSET=utf8;
                 ');
                 
                 if($isNewestSourcesTable===false) {
@@ -160,11 +162,41 @@ class Database {
                         INSERT INTO '.\F3::get('db_prefix').'version (version) VALUES (5);
                     ');
                 }
+                if(strnatcmp($version, "6") < 0){
+                    \F3::get('db')->exec('
+                        ALTER TABLE '.\F3::get('db_prefix').'sources ADD filter TEXT;
+                    ');
+                    \F3::get('db')->exec('
+                        INSERT INTO '.\F3::get('db_prefix').'version (version) VALUES (6);
+                    ');
+                }
+                // Jump straight from v6 to v8 due to bug in previous version of the code
+                // in /daos/sqlite/Database.php which
+                // set the database version to "7" for initial installs.
+                if(strnatcmp($version, "8") < 0){
+                	\F3::get('db')->exec('
+                        ALTER TABLE '.\F3::get('db_prefix').'sources ADD lastentry INT;
+                    ');
+                	\F3::get('db')->exec('
+                        INSERT INTO '.\F3::get('db_prefix').'version (version) VALUES (8);
+                    ');
+                }
+				if(strnatcmp($version, "9") < 0) {
+					\F3::get('db')->exec('
+                        ALTER TABLE '.\F3::get('db_prefix').'items ADD shared BOOL;
+                    ');
+					\F3::get('db')->exec('
+                        INSERT INTO version (version) VALUES (9);
+                    ');
+				}
             }
             
             // just initialize once
-            $initialized = true;
+            self::$initialized = true;
         }
+
+        $class = 'daos\\' . \F3::get('db_type') . '\\Statements';
+        $this->stmt = new $class();
     }
     
     

@@ -47,6 +47,20 @@ class Sources extends Database {
             \F3::get('logger')->log('Unimplemented method for ' . \F3::get('db_type') . ': ' . $name, \ERROR);
     }
     
+    public function get() {
+        $sources = $this->backend->get();
+        // remove items with private tags
+        if(!\F3::get('auth')->showPrivateTags()) {
+            foreach($sources as $idx => $source) {
+                if (strpos($source['tags'], "@") !== false) {
+                    unset($sources[$idx]);
+                }
+            }
+            $sources = array_values($sources);
+        }
+        
+        return $sources;
+    }
     
     /**
      * validate new data for a given source
@@ -74,10 +88,10 @@ class Sources extends Database {
     
         // check params
         } else {
-            // params given but not expectet
+            // params given but not expected
             if($spout->params===false) {
                 if(is_array($spout->params) && count($spout->params)>0) {
-                    $result['spout'] = 'this spout doesn\'t excpect any param';
+                    $result['spout'] = 'this spout doesn\'t expect any param';
                 }
             }
         
